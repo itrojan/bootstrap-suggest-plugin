@@ -138,7 +138,8 @@
         var dmcss = {};
         if (options.listAlign === 'left') {
             dmcss = {
-                'left': $input.siblings('div').width() - parentWidth,
+                // 'left': $input.siblings('div').width() - parentWidth,
+                'left': -$input[0].offsetWidth,
                 'right': 'auto'
             };
         } else if (options.listAlign === 'right') {
@@ -740,9 +741,9 @@
 
                 // 是否显示 button 按钮
                 if (!options.showBtn) {
-                    $input.css('borderRadius', 4);
-                    $parent.css('width', '100%')
-                        .find('.btn:eq(0)').hide();
+                    // $input.css('borderRadius', 4);
+                    // $parent.css('width', '100%').find('.btn:eq(0)').hide();
+                    $parent.find('.input-group-btn:eq(0)').find('.btn:eq(0)').hide();
                 }
 
                 // 移除 disabled 类，并禁用自动完成
@@ -906,21 +907,22 @@
 
                 // 下拉按钮点击时
                 $parent.find('.btn:eq(0)').attr('data-toggle', '').click(function() {
-                    if (!$dropdownMenu.is(':visible')) {
-                        if (options.url) {
-                            $input.click().focus();
-                            if (!$dropdownMenu.find('tr').length) {
-                                return FALSE;
+                    if (options.showBtn) {
+                        if (!$dropdownMenu.is(':visible')) {
+                            if (options.url) {
+                                $input.click().focus();
+                                if (!$dropdownMenu.find('tr').length) {
+                                    return FALSE;
+                                }
+                            } else {
+                                // 不以 keyword 作为过滤，展示所有的数据
+                                refreshDropMenu($input, options.data, options);
                             }
+                            showDropMenu($input, options);
                         } else {
-                            // 不以 keyword 作为过滤，展示所有的数据
-                            refreshDropMenu($input, options.data, options);
+                            hideDropMenu($input, options);
                         }
-                        showDropMenu($input, options);
-                    } else {
-                        hideDropMenu($input, options);
                     }
-
                     return FALSE;
                 });
 
@@ -957,8 +959,8 @@
 
                     $parent.mouseenter(function() {
                         if (!$input.prop(DISABLED)) {
-                            $iClear.css('right', options.showBtn ? Math.max($input.next('.input-group-btn').width(), 33) + 2 : 12)
-                                .show();
+                            // $iClear.css('right', options.showBtn ? Math.max($input.next('.input-group-btn').width(), 33) + 2 : 12).show();
+                            $iClear.css('left', $input.width()+5).show();
                         }
                     }).mouseleave(function() {
                         $iClear.hide();
